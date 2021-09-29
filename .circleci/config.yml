@@ -5,7 +5,7 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 orbs:
   # Declare a dependency on the welcome-orb
-  welcome: circleci/aws-cli@2.1.29
+  welcome: circleci/aws-cli@2.0.3
 # Orchestrate or schedule a set of jobs
 jobs:
   create-infrastructure:
@@ -19,7 +19,11 @@ jobs:
       - checkout
       - run:
           name: "runs aws cloudformation command and makes sure infrastructure exists"
-          command: aws cloudformation deploy --template-file template.yml --stack-name test-stack-from-circleci
+          command: |
+            aws cloudformation deploy \
+              --template-file template.yml \
+              --stack-name test-infra-for-circleci \
+              --region us-east-1
     
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
