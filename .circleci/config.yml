@@ -5,7 +5,7 @@ version: 2.1
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 orbs:
   # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.4.1
+  welcome: circleci/aws-cli@2.0.3
 # Orchestrate or schedule a set of jobs
 jobs:
   print-hello:
