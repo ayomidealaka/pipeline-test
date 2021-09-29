@@ -8,6 +8,20 @@ orbs:
   welcome: circleci/aws-cli@2.0.3
 # Orchestrate or schedule a set of jobs
 jobs:
+  export-credential:
+    docker:
+      - image: amazon/aws-cli
+    # Add steps to the job
+    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+    steps:
+      - checkout
+      - run:
+          name: "export security key"
+          command: |
+            export ${AWS_ACCESS_KEY_ID}
+            export ${AWS_DEFAULT_REGION}
+            export ${AWS_SECRET_ACCESS_KEY}
+  
   create-infrastructure:
     # Specify the execution environment.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
@@ -24,10 +38,14 @@ jobs:
               --template-file template.yml \
               --stack-name test-infra-for-circleci \
               --region us-east-1
+
     
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   create-infra-workflow:
     jobs:
-      - create-infrastructure
+      - export-credential
+      - create-infrastructure:
+          requires: 
+            - export-credential
