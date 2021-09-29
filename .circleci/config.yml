@@ -8,39 +8,22 @@ orbs:
   welcome: circleci/aws-cli@2.0.3
 # Orchestrate or schedule a set of jobs
 jobs:
-  print-hello:
+  create-infrastructure:
     # Specify the execution environment.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
-      - image: circleci/node:13.8.0
+      - image: circelci/aws-cli
     # Add steps to the job
     # See: https://circleci.com/docs/2.0/configuration-reference/#steps
     steps:
       - checkout
       - run:
-          name: "Say hello"
-          command: "echo Hello!"
-  print-world:
-    docker:
-     - image: circleci/node:13.8.0
-    steps: 
-     - run:
-        name: "Prints world"
-        command: "echo world!"
-  print-myname:
-    docker:
-     - image: circleci/node:13.8.0
-    steps: 
-     - run:
-        name: "Prints my name from the Environment variable on Circle ci"
-        command: "echo $MY_NAME_ENV_VAR"
+          name: "runs aws cloudformation command and makes sure infrastructure exists"
+          command: aws cloudformation deploy --template-file template.yml --stack-name test-stack-from-circleci
     
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  create-infra-workflow:
     jobs:
-      - print-hello
-      - print-world:
-          requires: [print-hello]
-      - print-myname
+      - create-infrastructure
